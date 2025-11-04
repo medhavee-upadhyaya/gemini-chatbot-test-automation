@@ -18,3 +18,7 @@ venv/
 
 # System files
 .DS_Store
+config.yaml
+
+# Sensitive configuration
+config.yaml

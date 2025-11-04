@@ -1,9 +1,0 @@
-model: models/gemini-2.5-flash
-gemini_api_key: "AIzaSyB_zOJMNVSRVWQdcdmnt5g10_X3pcfttp0"
-
-prompts:
-  - "Explain software testing in one sentence."
-  - "What is 2 + 2?"
-  - "Give me one benefit of automation testing."
-
-math_prompt: "What is 5 * 6?"
