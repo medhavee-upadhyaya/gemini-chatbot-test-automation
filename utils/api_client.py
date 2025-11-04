@@ -1,25 +1,21 @@
+import os
 import google.generativeai as genai
-import yaml
 
 class ChatbotClient:
-    """Handles communication with Gemini API."""
-
-    def __init__(self, config_path="config/config.yaml", model_name=None):
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-        self.api_key = config.get("gemini_api_key")
+    def __init__(self, model: str, api_key: str | None = None):
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
+        if not self.api_key:
+            raise ValueError("Gemini API key missing. Set GEMINI_API_KEY or pass api_key.")
         genai.configure(api_key=self.api_key)
+        self.model = genai.GenerativeModel(model)
 
-        # Use model from argument or fallback to config file
-        self.model_name = model_name or config.get("model", "gemini-pro")
-        self.model = genai.GenerativeModel(self.model_name)
-
-    def send_message(self, prompt):
-        """Send a prompt to Gemini and return text response."""
+    def send_message(self, prompt: str) -> dict:
         response = self.model.generate_content(prompt)
-        return response.text.strip() if response and response.text else ""
+        text = getattr(response, "text", "") or ""
+        # Some SDK builds expose usage via usage_metadata; guard if absent
+        tokens_used = getattr(getattr(response, "usage_metadata", None), "total_token_count", 0) or 0
+        return {"response": text, "tokens_used": int(tokens_used), "confidence": 0.0}
 
-    # 👇 Add this alias for test compatibility
-    def send_prompt(self, prompt):
-        """Alias for send_message for backward compatibility."""
+    # alias used by tests
+    def send_prompt(self, prompt: str) -> dict:
         return self.send_message(prompt)

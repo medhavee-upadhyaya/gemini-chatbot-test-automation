@@ -1,0 +1,20 @@
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore pytest cache
+.pytest_cache/
+
+# Ignore generated reports and logs
+reports/*.html
+reports/*.csv
+reports/*.json
+reports/logs/
+
+# Virtual environment
+venv/
+
+# System files
+.DS_Store
